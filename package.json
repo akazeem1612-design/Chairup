@@ -1,0 +1,9 @@
+{
+  "name": "chairup",
+  "version": "1.0.0",
+  "description": "Marketplace for salon and barbershop seats",
+  "dependencies": {
+    "stripe": "^14.21.0",
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChairUp — Book a Professional Seat Near You</title>
+    <meta name="description"
+        content="ChairUp is the marketplace for beauty and grooming professionals to find and rent salon chairs, barbershop booths, and spa suites by the hour or day." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav class="nav" id="main-nav">
+        <div class="nav-inner">
+            <a href="#" class="logo" id="logo-link">
+                <span class="logo-icon">✂</span>
+                <span class="logo-text">ChairUp</span>
+            </a>
+            <div class="nav-links" id="nav-links">
+                <a href="#" class="nav-link active" id="nav-explore" onclick="showPage('explore')">Explore</a>
+                <a href="#" class="nav-link" id="nav-how" onclick="showPage('how')">How It Works</a>
+                <a href="#" class="nav-link" id="nav-host" onclick="showPage('host')">List Your Space</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-ghost" id="btn-login" onclick="showAuthModal('login')">Log in</button>
+                <button class="btn-primary" id="btn-signup" onclick="showAuthModal('signup')">Sign up</button>
+                <div class="avatar-menu hidden" id="user-avatar-menu">
+                    <div class="avatar" id="user-avatar" onclick="toggleProfileMenu()">AK</div>
+                    <div class="profile-dropdown hidden" id="profile-dropdown">
+                        <a href="#" onclick="showPage('dashboard')">My Dashboard</a>
+                        <a href="#" onclick="showPage('bookings')">My Bookings</a>
+                        <a href="#" onclick="showPage('host')">List a Space</a>
+                        <hr />
+                        <a href="#" onclick="logout()">Log out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PAGES -->
+
+    <!-- ========= EXPLORE PAGE ========= -->
+    <div id="page-explore" class="page active">
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-bg">
+                <div class="hero-blob blob-1"></div>
+                <div class="hero-blob blob-2"></div>
+                <div class="hero-blob blob-3"></div>
+            </div>
+            <div class="hero-content">
+                <div class="hero-badge">✨ Now in 12 cities</div>
+                <h1 class="hero-title">Your chair.<br /><em>Your schedule.</em><br />Your business.</h1>
+                <p class="hero-sub">Book professional salon chairs, barber booths, and spa suites by the hour or day —
+                    no long leases, no drama.</p>
+
+                <!-- SEARCH BAR -->
+                <div class="search-bar" id="hero-search">
+                    <div class="search-group">
+                        <label>Location</label>
+                        <input type="text" id="search-location" placeholder="City or neighborhood" />
+                    </div>
+                    <div class="search-divider"></div>
+                    <div class="search-group">
+                        <label>Date</label>
+                        <input type="date" id="search-date" />
+                    </div>
+                    <div class="search-divider"></div>
+                    <div class="search-group">
+                        <label>Space type</label>
+                        <select id="search-type">
+                            <option value="">Any type</option>
+                            <option value="barber">Barber Booth</option>
+                            <option value="salon">Salon Chair</option>
+                            <option value="nail">Nail Station</option>
+                            <option value="spa">Spa Suite</option>
+                            <option value="lash">Lash Studio</option>
+                        </select>
+                    </div>
+                    <button class="btn-search" onclick="runSearch()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="m21 21-4.35-4.35" />
+                        </svg>
+                        Search
+                    </button>
+                </div>
+
+                <div class="hero-tags">
+                    <span class="tag" onclick="filterByType('barber')">✂ Barber booths</span>
+                    <span class="tag" onclick="filterByType('salon')">💆 Salon chairs</span>
+                    <span class="tag" onclick="filterByType('nail')">💅 Nail stations</span>
+                    <span class="tag" onclick="filterByType('spa')">🧘 Spa suites</span>
+                    <span class="tag" onclick="filterByType('lash')">👁 Lash studios</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS STRIP -->
+        <section class="stats-strip">
+            <div class="stat">
+                <span class="stat-num" data-target="2400">0</span>
+                <span class="stat-label">Spaces listed</span>
+            </div>
+            <div class="stat">
+                <span class="stat-num" data-target="14000">0</span>
+                <span class="stat-label">Bookings completed</span>
+            </div>
+            <div class="stat">
+                <span class="stat-num" data-target="12">0</span>
+                <span class="stat-label">Cities active</span>
+            </div>
+            <div class="stat">
+                <span class="stat-num" data-target="97">0</span>
+                <span class="stat-label">% Satisfaction</span>
+            </div>
+        </section>
+
+        <!-- LISTINGS SECTION -->
+        <section class="listings-section">
+            <div class="section-header">
+                <h2>Available near you</h2>
+                <div class="filter-chips" id="filter-chips">
+                    <button class="chip active" onclick="filterChip(this,'all')">All spaces</button>
+                    <button class="chip" onclick="filterChip(this,'barber')">✂ Barber</button>
+                    <button class="chip" onclick="filterChip(this,'salon')">💆 Salon</button>
+                    <button class="chip" onclick="filterChip(this,'nail')">💅 Nail</button>
+                    <button class="chip" onclick="filterChip(this,'spa')">🧘 Spa</button>
+                    <button class="chip" onclick="filterChip(this,'lash')">👁 Lash</button>
+                </div>
+            </div>
+
+            <div class="listings-grid" id="listings-grid">
+                <div class="listings-loading" id="listings-loading">
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                    <div class="skeleton-card"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS MINI -->
+        <section class="how-mini">
+            <div class="how-mini-inner">
+                <h2>Run your business on your terms</h2>
+                <p class="section-sub">No lease. No overhead. Just show up and do great work.</p>
+                <div class="steps-row">
+                    <div class="step-card">
+                        <div class="step-icon">🔍</div>
+                        <h3>Search</h3>
+                        <p>Find available chairs near you filtered by type, date, price, and amenities.</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step-card">
+                        <div class="step-icon">📅</div>
+                        <h3>Book</h3>
+                        <p>Pick your time slot, pay securely, and get instant confirmation.</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                    <div class="step-card">
+                        <div class="step-icon">✅</div>
+                        <h3>Show up</h3>
+                        <p>Arrive, work, earn. No long-term commitments or upfront costs.</p>
+                    </div>
+                </div>
+                <button class="btn-primary btn-lg" onclick="showPage('how')">Learn more</button>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="testimonials-section">
+            <h2>What our community says</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p>"I was doing hair in my apartment and clients were uncomfortable. ChairUp gave me a professional
+                        space for just $18/hr. My bookings doubled."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background: linear-gradient(135deg, #f093fb, #f5576c);">JR
+                        </div>
+                        <div>
+                            <strong>Jasmine R.</strong>
+                            <span>Freelance Hairstylist · Atlanta, GA</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card featured">
+                    <div class="stars">★★★★★</div>
+                    <p>"I own a 6-chair shop and 2 chairs sit empty on Tuesdays and Wednesdays. ChairUp turned that dead
+                        space into $800/month passive income."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">DM
+                        </div>
+                        <div>
+                            <strong>DeShawn M.</strong>
+                            <span>Shop Owner · Chicago, IL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p>"I'm in cosmetology school and needed practice clients in a real setting. ChairUp let me book a
+                        chair for just a few hours. Game changer."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">ML
+                        </div>
+                        <div>
+                            <strong>Maya L.</strong>
+                            <span>Cosmetology Student · Miami, FL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA BANNER -->
+        <section class="cta-banner">
+            <div class="cta-content">
+                <h2>Have empty chairs collecting dust?</h2>
+                <p>List your space in under 10 minutes and start earning from your downtime.</p>
+                <button class="btn-cta-white" onclick="showPage('host')">Become a Host →</button>
+            </div>
+            <div class="cta-visual">
+                <div class="cta-stat-bubble">
+                    <span class="cta-stat-num">$1,200</span>
+                    <span class="cta-stat-label">avg/month per chair</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ========= LISTING DETAIL PAGE ========= -->
+    <div id="page-detail" class="page">
+        <div class="detail-container" id="detail-container">
+            <!-- populated by JS -->
+        </div>
+    </div>
+
+    <!-- ========= HOW IT WORKS PAGE ========= -->
+    <div id="page-how" class="page">
+        <div class="page-content">
+            <div class="page-hero-simple">
+                <h1>How ChairUp Works</h1>
+                <p>The smartest way to access professional space — or monetize the space you have.</p>
+            </div>
+
+            <div class="dual-how">
+                <div class="how-column">
+                    <div class="how-column-header renter-header">
+                        <span class="column-badge">For Service Providers</span>
+                        <h2>Book a seat & grow your clientele</h2>
+                    </div>
+                    <div class="how-steps">
+                        <div class="how-step">
+                            <div class="how-step-num">01</div>
+                            <div class="how-step-content">
+                                <h3>Create your free profile</h3>
+                                <p>Tell us your specialty — haircuts, color, nails, lashes, massage, threading, and
+                                    more. Upload your portfolio and set your rates.</p>
+                            </div>
+                        </div>
+                        <div class="how-step">
+                            <div class="how-step-num">02</div>
+                            <div class="how-step-content">
+                                <h3>Search available spaces</h3>
+                                <p>Filter by location, date, space type, price, and amenities. See real-time
+                                    availability and verified photos.</p>
+                            </div>
+                        </div>
+                        <div class="how-step">
+                            <div class="how-step-num">03</div>
+                            <div class="how-step-content">
+                                <h3>Instant booking</h3>
+                                <p>Book by the hour, half-day, or full day. Payment is held securely until after your
+                                    session.</p>
+                            </div>
+                        </div>
+                        <div class="how-step">
+                            <div class="how-step-num">04</div>
+                            <div class="how-step-content">
+                                <h3>Show up & get paid</h3>
+                                <p>Walk in with your tools, serve your clients, collect your earnings. No long-term
+                                    obligations.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="showPage('explore')">Find a Space →</button>
+                </div>
+
+                <div class="how-divider-vertical"></div>
+
+                <div class="how-column">
+                    <div class="how-column-header host-header">
+                        <span class="column-badge column-badge-gold">For Shop Owners</span>
+                        <h2>Earn from your empty chairs</h2>
+                    </div>
+                    <div class="how-steps">
+                        <div class="how-step">
+                            <div class="how-step-num gold">01</div>
+                            <div class="how-step-content">
+                                <h3>List your space</h3>
+                                <p>Add photos, describe your amenities (WiFi, shampoo bowl, towels, parking), set your
+                                    daily or hourly rate.</p>
+                            </div>
+                        </div>
+                        <div class="how-step">
+                            <div class="how-step-num gold">02</div>
+                            <div class="how-step-content">
+                                <h3>Set your availability</h3>
+                                <p>Control exactly when your chairs are open. Block out your busy times and open slots
+                                    when you're slow.</p>
+                            </div>
+                        </div>
+                        <div class="how-step">
+                            <div class="how-step-num gold">03</div>
+                            <div class="how-step-content">
+                                <h3>Approve bookings</h3>
+                                <p>Instant book or review every renter. Our verification system screens all service
+                                    professionals.</p>
+                            </div>
+                        </div>
+                        <div class="how-step">
+                            <div class="how-step-num gold">04</div>
+                            <div class="how-step-content">
+                                <h3>Get paid automatically</h3>
+                                <p>Funds are deposited within 24 hours of each completed booking. No chasing payments.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-gold" onclick="showPage('host')">List My Space →</button>
+                </div>
+            </div>
+
+            <!-- PRICING -->
+            <div class="pricing-section">
+                <h2>Simple, transparent fees</h2>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <h3>Service Providers</h3>
+                        <div class="price-line"><span class="price-pct">12%</span> <span>service fee</span></div>
+                        <ul>
+                            <li>✓ Instant or same-day bookings</li>
+                            <li>✓ Secure payment protection</li>
+                            <li>✓ Reviews and reputation system</li>
+                            <li>✓ Cancel up to 24h before, full refund</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-card featured-pricing">
+                        <div class="pricing-popular">Most popular</div>
+                        <h3>Shop Hosts</h3>
+                        <div class="price-line"><span class="price-pct">8%</span> <span>host fee</span></div>
+                        <ul>
+                            <li>✓ Unlimited listings</li>
+                            <li>✓ Smart calendar management</li>
+                            <li>✓ Renter verification & screening</li>
+                            <li>✓ $1M liability coverage included</li>
+                            <li>✓ 24h payout after bookings</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= HOST/LIST SPACE PAGE ========= -->
+    <div id="page-host" class="page">
+        <div class="page-content">
+            <div class="page-hero-simple">
+                <h1>List your space on ChairUp</h1>
+                <p>Turn empty chairs into steady income — in under 10 minutes.</p>
+            </div>
+
+            <div class="host-form-container">
+                <div class="form-progress">
+                    <div class="progress-step active" id="pstep-1">1 · Space info</div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" id="pstep-2">2 · Photos & pricing</div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" id="pstep-3">3 · Availability</div>
+                    <div class="progress-line"></div>
+                    <div class="progress-step" id="pstep-4">4 · Review & publish</div>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="form-step" id="form-step-1">
+                    <h2>Tell us about your space</h2>
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label>Space name</label>
+                            <input type="text" id="host-name" placeholder="e.g. Premium Barber Booth at Cuts N' More" />
+                        </div>
+                        <div class="form-group">
+                            <label>Space type</label>
+                            <select id="host-type">
+                                <option value="">Select type</option>
+                                <option value="barber">Barber Booth</option>
+                                <option value="salon">Salon Chair</option>
+                                <option value="nail">Nail Station</option>
+                                <option value="spa">Spa Suite</option>
+                                <option value="lash">Lash Studio</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of seats available</label>
+                            <input type="number" id="host-seats" placeholder="1" min="1" max="20" />
+                        </div>
+                        <div class="form-group full">
+                            <label>Shop address</label>
+                            <input type="text" id="host-address" placeholder="123 Main St, Atlanta, GA 30301" />
+                        </div>
+                        <div class="form-group full">
+                            <label>Description</label>
+                            <textarea id="host-desc" rows="4"
+                                placeholder="Describe your space — layout, vibe, what makes it great for professionals..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="amenities-section">
+                        <label>Amenities available</label>
+                        <div class="amenities-grid" id="amenities-grid">
+                            <label class="amenity-chip"><input type="checkbox" value="wifi" /> WiFi</label>
+                            <label class="amenity-chip"><input type="checkbox" value="parking" /> Free Parking</label>
+                            <label class="amenity-chip"><input type="checkbox" value="shampoo" /> Shampoo Bowl</label>
+                            <label class="amenity-chip"><input type="checkbox" value="towels" /> Towels Provided</label>
+                            <label class="amenity-chip"><input type="checkbox" value="storage" /> Storage Locker</label>
+                            <label class="amenity-chip"><input type="checkbox" value="reception" /> Receptionist</label>
+                            <label class="amenity-chip"><input type="checkbox" value="retail" /> Retail Display</label>
+                            <label class="amenity-chip"><input type="checkbox" value="music" /> Music System</label>
+                            <label class="amenity-chip"><input type="checkbox" value="ac" /> A/C</label>
+                            <label class="amenity-chip"><input type="checkbox" value="waiting" /> Waiting Area</label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-primary" onclick="nextFormStep(2)">Next: Photos & Pricing →</button>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="form-step hidden" id="form-step-2">
+                    <h2>Photos & Pricing</h2>
+                    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17,8 12,3 7,8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <p>Drag & drop photos or click to upload</p>
+                        <span>JPG, PNG up to 20MB each — minimum 3 photos</span>
+                        <input type="file" id="file-input" multiple accept="image/*" style="display:none"
+                            onchange="handleFileUpload(event)" />
+                    </div>
+                    <div class="uploaded-previews" id="uploaded-previews"></div>
+
+                    <div class="form-grid" style="margin-top: 2rem;">
+                        <div class="form-group">
+                            <label>Hourly rate ($)</label>
+                            <input type="number" id="host-price-hour" placeholder="e.g. 20" />
+                        </div>
+                        <div class="form-group">
+                            <label>Daily rate ($) <span class="optional">optional</span></label>
+                            <input type="number" id="host-price-day" placeholder="e.g. 120" />
+                        </div>
+                        <div class="form-group full">
+                            <label>Minimum booking duration</label>
+                            <select id="host-min">
+                                <option>1 hour</option>
+                                <option>2 hours</option>
+                                <option>Half day (4 hrs)</option>
+                                <option>Full day</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-ghost" onclick="nextFormStep(1)">← Back</button>
+                        <button class="btn-primary" onclick="nextFormStep(3)">Next: Availability →</button>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="form-step hidden" id="form-step-3">
+                    <h2>Set your availability</h2>
+                    <div class="availability-grid">
+                        <div class="day-row" id="day-monday">
+                            <label class="day-toggle"><input type="checkbox" checked
+                                    onchange="toggleDay(this,'monday')" /> Monday</label>
+                            <div class="time-inputs" id="time-monday">
+                                <input type="time" value="09:00" /> to <input type="time" value="18:00" />
+                            </div>
+                        </div>
+                        <div class="day-row" id="day-tuesday">
+                            <label class="day-toggle"><input type="checkbox" checked
+                                    onchange="toggleDay(this,'tuesday')" /> Tuesday</label>
+                            <div class="time-inputs" id="time-tuesday">
+                                <input type="time" value="09:00" /> to <input type="time" value="18:00" />
+                            </div>
+                        </div>
+                        <div class="day-row">
+                            <label class="day-toggle"><input type="checkbox" checked /> Wednesday</label>
+                            <div class="time-inputs">
+                                <input type="time" value="09:00" /> to <input type="time" value="18:00" />
+                            </div>
+                        </div>
+                        <div class="day-row">
+                            <label class="day-toggle"><input type="checkbox" checked /> Thursday</label>
+                            <div class="time-inputs">
+                                <input type="time" value="09:00" /> to <input type="time" value="18:00" />
+                            </div>
+                        </div>
+                        <div class="day-row">
+                            <label class="day-toggle"><input type="checkbox" checked /> Friday</label>
+                            <div class="time-inputs">
+                                <input type="time" value="09:00" /> to <input type="time" value="20:00" />
+                            </div>
+                        </div>
+                        <div class="day-row">
+                            <label class="day-toggle"><input type="checkbox" checked /> Saturday</label>
+                            <div class="time-inputs">
+                                <input type="time" value="10:00" /> to <input type="time" value="17:00" />
+                            </div>
+                        </div>
+                        <div class="day-row">
+                            <label class="day-toggle"><input type="checkbox" /> Sunday</label>
+                            <div class="time-inputs disabled" id="time-sunday">
+                                <input type="time" value="10:00" disabled /> to <input type="time" value="15:00"
+                                    disabled />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top:1.5rem">
+                        <label>Booking policy</label>
+                        <select id="host-policy">
+                            <option value="instant">Instant Book — approve automatically</option>
+                            <option value="manual">Manual Approval — I review each request</option>
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-ghost" onclick="nextFormStep(2)">← Back</button>
+                        <button class="btn-primary" onclick="nextFormStep(4)">Next: Review →</button>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="form-step hidden" id="form-step-4">
+                    <h2>Review & Publish</h2>
+                    <div class="review-card">
+                        <div class="review-preview">
+                            <div class="review-preview-img">📸 Your photos will appear here</div>
+                            <div class="review-preview-info">
+                                <h3 id="review-name">Your Space Name</h3>
+                                <p id="review-type">Space type · Location</p>
+                                <div class="review-price"><span id="review-price">$0</span>/hr</div>
+                            </div>
+                        </div>
+                        <div class="review-checklist">
+                            <div class="check-item">✓ Space details added</div>
+                            <div class="check-item">✓ Pricing set</div>
+                            <div class="check-item">✓ Availability configured</div>
+                            <div class="check-item">✓ Ready to publish</div>
+                        </div>
+                    </div>
+
+                    <div class="terms-box">
+                        <label class="day-toggle">
+                            <input type="checkbox" id="terms-agree" />
+                            I agree to the ChairUp <a href="#">Host Agreement</a> and <a href="#">Terms of Service</a>
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn-ghost" onclick="nextFormStep(3)">← Back</button>
+                        <button class="btn-publish" onclick="publishListing()">🚀 Publish My Listing</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOST EARNINGS CALCULATOR -->
+            <div class="earnings-calc">
+                <h2>Estimate your earnings</h2>
+                <div class="calc-inner">
+                    <div class="calc-inputs">
+                        <div class="calc-group">
+                            <label>Your hourly rate ($)</label>
+                            <input type="range" id="calc-rate" min="10" max="100" value="25" oninput="calcEarnings()" />
+                            <span id="calc-rate-val">$25/hr</span>
+                        </div>
+                        <div class="calc-group">
+                            <label>Hours booked per week</label>
+                            <input type="range" id="calc-hours" min="1" max="60" value="20" oninput="calcEarnings()" />
+                            <span id="calc-hours-val">20 hrs</span>
+                        </div>
+                    </div>
+                    <div class="calc-result">
+                        <div class="calc-result-inner">
+                            <span class="calc-label">Estimated monthly income</span>
+                            <span class="calc-amount" id="calc-amount">$3,680</span>
+                            <span class="calc-sub">after 8% ChairUp fee</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ========= DASHBOARD PAGE ========= -->
+    <div id="page-dashboard" class="page">
+        <div class="page-content">
+            <div class="dashboard-header">
+                <div>
+                    <h1>Welcome back, Alex 👋</h1>
+                    <p>Here's what's happening with your spaces.</p>
+                </div>
+                <button class="btn-primary" onclick="showPage('host')">+ List New Space</button>
+            </div>
+
+            <div class="dashboard-stats">
+                <div class="d-stat">
+                    <span class="d-stat-icon">💰</span>
+                    <div>
+                        <strong>$4,280</strong>
+                        <span>This month</span>
+                    </div>
+                </div>
+                <div class="d-stat">
+                    <span class="d-stat-icon">📅</span>
+                    <div>
+                        <strong>38</strong>
+                        <span>Bookings this month</span>
+                    </div>
+                </div>
+                <div class="d-stat">
+                    <span class="d-stat-icon">⭐</span>
+                    <div>
+                        <strong>4.9</strong>
+                        <span>Average rating</span>
+                    </div>
+                </div>
+                <div class="d-stat">
+                    <span class="d-stat-icon">🪑</span>
+                    <div>
+                        <strong>2</strong>
+                        <span>Active listings</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-main">
+                    <h3>Upcoming bookings</h3>
+                    <div class="booking-list" id="upcoming-bookings">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+                <div class="dashboard-side">
+                    <h3>Your listings</h3>
+                    <div class="mini-listing-list" id="my-listings">
+                        <!-- populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========= BOOKINGS PAGE ========= -->
+    <div id="page-bookings" class="page">
+        <div class="page-content">
+            <h1>My Bookings</h1>
+            <div class="booking-tabs">
+                <button class="booking-tab active" onclick="switchBookingTab(this,'upcoming')">Upcoming</button>
+                <button class="booking-tab" onclick="switchBookingTab(this,'past')">Past</button>
+                <button class="booking-tab" onclick="switchBookingTab(this,'cancelled')">Cancelled</button>
+            </div>
+            <div id="booking-list-container" class="booking-list-full">
+                <!-- populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOKING MODAL -->
+    <div class="modal-overlay hidden" id="booking-modal-overlay" onclick="closeBookingModal(event)">
+        <div class="modal booking-modal" id="booking-modal">
+            <button class="modal-close" onclick="closeBookingModal()">✕</button>
+            <div id="booking-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL -->
+    <div class="modal-overlay hidden" id="auth-modal-overlay" onclick="closeAuthModal(event)">
+        <div class="modal auth-modal" id="auth-modal">
+            <button class="modal-close" onclick="closeAuthModal()">✕</button>
+            <div id="auth-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- SUCCESS TOAST -->
+    <div class="toast hidden" id="toast">
+        <span id="toast-msg">✓ Success!</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="logo">
+                    <span class="logo-icon">✂</span>
+                    <span class="logo-text">ChairUp</span>
+                </div>
+                <p>The marketplace for beauty & grooming professionals to find flexible workspace.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Renters</h4>
+                    <a href="#">Find a space</a>
+                    <a href="#">How it works</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">Insurance</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Hosts</h4>
+                    <a href="#">List your space</a>
+                    <a href="#">Host guide</a>
+                    <a href="#">Earnings calculator</a>
+                    <a href="#">Host protection</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <a href="#">About us</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Press</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <a href="#">Help center</a>
+                    <a href="#">Safety</a>
+                    <a href="#">Contact us</a>
+                    <a href="#">Trust & safety</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 ChairUp Inc. All rights reserved.</span>
+            <div class="footer-legal">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Supabase JS client (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <!-- ChairUp config & DB layer -->
+    <script src="config.js"></script>
+    <script src="db.js"></script>
+    <!-- App logic (runs after DB is ready) -->
+    <script src="app.js"></script>
+</body>
+
+</html>
